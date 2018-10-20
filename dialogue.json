@@ -1,0 +1,234 @@
+{
+    "output": {
+        "question1": {
+            "type": "buttons",
+            "title": "質問1/10",
+            "text": "ストレスを感じやすい方だ",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "当てはまる",
+                    "data": "no"
+                    
+                },
+                {
+                    "type": "postback",
+                    "label": "どちらでもない",
+                    "data": "soso"
+                },
+                {
+                    "type": "postback",
+                    "label": "当てはまらない",
+                    "data": "yes"
+                }
+            ]
+        },
+        "question2": {
+            "type": "buttons",
+            "title": "質問2/10",
+            "text": "かかりつけの病院がある",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "当てはまる",
+                    "data": "yes"
+                    
+                },
+                {
+                    "type": "postback",
+                    "label": "どちらでもない",
+                    "data": "soso"
+                },
+                {
+                    "type": "postback",
+                    "label": "当てはまらない",
+                    "data": "no"
+                }
+            ]
+        },
+        "question3": {
+            "type": "buttons",
+            "title": "質問3/10",
+            "text": "人間関係で悩んでいる",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "当てはまる",
+                    "data": "no"
+                    
+                },
+                {
+                    "type": "postback",
+                    "label": "どちらでもない",
+                    "data": "soso"
+                },
+                {
+                    "type": "postback",
+                    "label": "当てはまらない",
+                    "data": "yes"
+                }
+            ]
+        },
+        "question4": {
+            "type": "buttons",
+            "title": "質問4/10",
+            "text": "人からよく褒められる",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "当てはまる",
+                    "data": "yes"
+                    
+                },
+                {
+                    "type": "postback",
+                    "label": "どちらでもない",
+                    "data": "soso"
+                },
+                {
+                    "type": "postback",
+                    "label": "当てはまらない",
+                    "data": "no"
+                }
+            ]
+        },
+        "question5": {
+            "type": "buttons",
+            "title": "質問5/10",
+            "text": "仕事にやりがいを感じる",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "当てはまる",
+                    "data": "yes"
+                    
+                },
+                {
+                    "type": "postback",
+                    "label": "どちらでもない",
+                    "data": "soso"
+                },
+                {
+                    "type": "postback",
+                    "label": "当てはまらない",
+                    "data": "no"
+                }
+            ]
+        },
+        "question6": {
+            "type": "buttons",
+            "title": "質問6/10",
+            "text": "過去一年の間に病気になった",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "当てはまる",
+                    "data": "no"
+                    
+                },
+                {
+                    "type": "postback",
+                    "label": "どちらでもない",
+                    "data": "soso"
+                },
+                {
+                    "type": "postback",
+                    "label": "当てはまらない",
+                    "data": "yes"
+                }
+            ]
+        },
+        "question7": {
+            "type": "buttons",
+            "title": "質問7/10",
+            "text": "夜ひとりで外出できる",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "当てはまる",
+                    "data": "yes"
+                    
+                },
+                {
+                    "type": "postback",
+                    "label": "どちらでもない",
+                    "data": "soso"
+                },
+                {
+                    "type": "postback",
+                    "label": "当てはまらない",
+                    "data": "no"
+                }
+            ]
+        },
+        "question8": {
+            "type": "buttons",
+            "title": "質問8/10",
+            "text": "人に好かれる方だ",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "当てはまる",
+                    "data": "yes"
+                    
+                },
+                {
+                    "type": "postback",
+                    "label": "どちらでもない",
+                    "data": "soso"
+                },
+                {
+                    "type": "postback",
+                    "label": "当てはまらない",
+                    "data": "no"
+                }
+            ]
+        },
+        "question9": {
+            "type": "buttons",
+            "title": "質問9/10",
+            "text": "友達から感謝されている",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "当てはまる",
+                    "data": "yes"
+                    
+                },
+                {
+                    "type": "postback",
+                    "label": "どちらでもない",
+                    "data": "soso"
+                },
+                {
+                    "type": "postback",
+                    "label": "当てはまらない",
+                    "data": "no"
+                }
+            ]
+        },
+        "question10": {
+            "type": "buttons",
+            "title": "質問10/10",
+            "text": "自分の長所が発揮できている",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "当てはまる",
+                    "data": "yes"
+                    
+                },
+                {
+                    "type": "postback",
+                    "label": "どちらでもない",
+                    "data": "soso"
+                },
+                {
+                    "type": "postback",
+                    "label": "当てはまらない",
+                    "data": "no"
+                }
+            ]
+        }
+    }
+}
