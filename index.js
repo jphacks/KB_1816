@@ -2,7 +2,7 @@
 var template = require( "./dialogue.json" );
 var questionNumber = 1;
 var score=0;
-var stage=[4];
+var stage=[0,0,0,0,0];
 
 const express = require('express');
 const line = require('@line/bot-sdk');
@@ -207,7 +207,7 @@ function handleEvent(event) {
                 }
 
                 //レコメンド
-                
+                score=Math.round((score/360)*100);
                 if (score>=90){
                     recommend2="\n評価S"
                 }else if (score>=80){
@@ -219,7 +219,7 @@ function handleEvent(event) {
                 }else{
                     recommend2="\n評価D"
                 }
-                score=Math.round((score/360)*100);
+                
                 String(score);
                 score="結果は"+score+"点でした！\n\n"
                 console.log(score);
