@@ -1,33 +1,38 @@
-// -----------------------------------------------------------------------------
-// モジュールのインポート
-const server = require('express')();
-const line = require('@line/bot-sdk'); // Messaging APIのSDKをインポート
+'use strict';
 
-// -----------------------------------------------------------------------------
-// パラメータ設定
-const line_config = {
-  channelAccessToken: process.env.LINE_ACCESS_TOKEN, // 環境変数からアクセストークンをセットしています
-  channelSecret: process.env.LINE_CHANNEL_SECRET, // 環境変数からChannel Secretをセットしています
+const express = require('express');
+const line = require('@line/bot-sdk');
+const PORT = process.env.PORT || 3000;
+
+const config = {
+    channelSecret: 'aefd4e784f5b48f6d7e89bdbd0863786',
+    channelAccessToken: '7lhY3o2lB0tT918k8qRjoS0+IhbpEmBpQD6i2hxARgwTMlyfmxJbqQA/86KG3k1JCiZlVXam2SsVPbL/upM6ww2EIi2W/yOOTpH6nhdz9Fhr+ui9DFovSeWxcyn919r4wIHiqeQR6sCtzQsxXmNFnQdB04t89/1O/w1cDnyilFU='
 };
 
-// -----------------------------------------------------------------------------
-// Webサーバー設定
-server.listen(process.env.PORT || 3000);
+const app = express();
 
-// APIコールのためのクライアントインスタンスを作成
-const bot = new line.Client(line_config);
+app.post('/webhook', line.middleware(config), (req, res) => {
+    console.log(req.body.events);
+    Promise
+      .all(req.body.events.map(handleEvent))
+      .then((result) => res.json(result));
+});
 
+const client = new line.Client(config);
 
-// -----------------------------------------------------------------------------
-// ルーター設定
-server.post('/webhook', line.middleware(line_config), (req, res, next) => {
-  res.sendStatus(200);
+function handleEvent(event) {
+  if (event.type !== 'message' || event.message.type !== 'text') {
+    return Promise.resolve(null);
+  }
 
-   // すべてのイベント処理のプロミスを格納する配列。
-    let events_processed = [];
+  return client.replyMessage(event.replyToken, {
+    type: 'text',
+    text: event.message.text //実際に返信の言葉を入れる箇所
+  });
+}
 
-    // イベントオブジェクトを順次処理。
-    req.body.events.forEach((event) => {
+app.listen(PORT);
+console.log(`Server running at ${PORT}`);orEach((event) => {
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text"){
             // ユーザーからのテキストメッセージが「こんにちは」だった場合のみ反応。
