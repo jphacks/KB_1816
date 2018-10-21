@@ -10,13 +10,13 @@ const PORT = process.env.PORT || 3000;
 
 const config = {
     channelSecret: 'aefd4e784f5b48f6d7e89bdbd0863786',
-    channelAccessToken: '7lhY3o2lB0tT918k8qRjoS0+IhbpEmBpQD6i2hxARgwTMlyfmxJbqQA/86KG3k1JCiZlVXam2SsVPbL/upM6ww2EIi2W/yOOTpH6nhdz9Fhr+ui9DFovSeWxcyn919r4wIHiqeQR6sCtzQsxXmNFnQdB04t89/1O/w1cDnyilFU='
+    channelAccessToken: 'HoOa0reh6KMBjLKTOMZbi+Z8hMK9y0+sFsf7by1vV3NdxDeAxfEhsEyzBiIuxasDCiZlVXam2SsVPbL/upM6ww2EIi2W/yOOTpH6nhdz9FhNyTUKaI8wcg3ggO+FTcHxUgEDw0FFq7/bY9gaePPoXAdB04t89/1O/w1cDnyilFU='
 };
 
 const app = express();
 
 app.post('/webhook', line.middleware(config), (req, res) => {
-    console.log(req.body.events);
+    //console.log(req.body.events);
     Promise
       .all(req.body.events.map(handleEvent))
       .then((result) => res.json(result));
@@ -32,7 +32,7 @@ function handleEvent(event) {
     var Weight=[47,28,44,34,33,36,23,44,34,37];    
     if ( event.type == 'message') {
         //メッセージ受信時
-        if(event.message.text === 'ボタン'){
+        if(event.message.text === 'スタート'){
             //1問目を送信
             questionNumber = 1;
             score=0;
@@ -67,8 +67,8 @@ function handleEvent(event) {
             score+=Weight[questionNumber-1]/2;
         }
         questionNumber++;
-        console.log(stage);
-        console.log(score);
+        // console.log(stage);
+        //console.log(score);
         
         //質問を番号に従って送信
         switch(questionNumber){
@@ -222,7 +222,7 @@ function handleEvent(event) {
                 
                 String(score);
                 score="結果は"+score+"点でした！\n\n"
-                console.log(score);
+                // console.log(score);
                 return client.replyMessage(event.replyToken,{
                     type:"text",
                     text:score+recommend+recommend2
@@ -238,4 +238,4 @@ function handleEvent(event) {
 }
 
 app.listen(PORT);
-console.log(`Server running at ${PORT}`);
+//console.log(`Server running at ${PORT}`);
