@@ -1,9 +1,9 @@
-# サンプル（プロダクト名）
+# More Happy Bot
 
-[![Product Name](image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)
+[![Product Name](image.png)](https://youtu.be/0rgjAyoKvgg)
 
 ## 製品概要
-幸せ X Tech
+Happy X Tech
 
 ### 背景（製品開発のきっかけ、課題等）
 
