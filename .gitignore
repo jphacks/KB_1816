@@ -1,1 +1,7 @@
 .DS_store
+linebot-starter-python-ngrok
+tmp
+slslb
+docs
+awsconfig.json
+.gitignore

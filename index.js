@@ -4,19 +4,31 @@ var questionNumber = 1;
 var score=0;
 var stage=[0,0,0,0,0];
 
+
+
 const express = require('express');
 const line = require('@line/bot-sdk');
 const PORT = process.env.PORT || 3000;
 
 const config = {
+
     channelSecret: 'aefd4e784f5b48f6d7e89bdbd0863786',
     channelAccessToken: 'HoOa0reh6KMBjLKTOMZbi+Z8hMK9y0+sFsf7by1vV3NdxDeAxfEhsEyzBiIuxasDCiZlVXam2SsVPbL/upM6ww2EIi2W/yOOTpH6nhdz9FhNyTUKaI8wcg3ggO+FTcHxUgEDw0FFq7/bY9gaePPoXAdB04t89/1O/w1cDnyilFU='
+
 };
+
 
 const app = express();
 
+// can access directory 
+app.use(express.static(__dirname + '/tmp'));
+
+var host = "";
+
 app.post('/webhook', line.middleware(config), (req, res) => {
+
     //console.log(req.body.events);
+
     Promise
       .all(req.body.events.map(handleEvent))
       .then((result) => res.json(result));
@@ -239,3 +251,4 @@ function handleEvent(event) {
 
 app.listen(PORT);
 //console.log(`Server running at ${PORT}`);
+
