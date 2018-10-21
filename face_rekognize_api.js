@@ -1,5 +1,7 @@
 'use strict';
 
+const request = require('request');
+
 const AWS = require("aws-sdk");
 AWS.config.loadFromPath('./awsconfig.json');
 
@@ -52,23 +54,8 @@ function readAllChunks(readableStream) {
 
 function handleEvent(event) {
   if (event.message.type =='image') {
-    // client.getMessageContent(event.message.id).then(function(data){
-    //     var buf = new Buffer(data);
-    //     var param = {
-    //     Image: {
-    //       Bytes: buf
-    //       }
-    //     };
-    //     save_to_bucket(buf, fileName);
-    //   })
-    // }
-
     const contentStream = client.getMessageContent(event.message.id);
-
-    var buf = new Buffer(contentStream);
-
-    console.log("buffer Successfully");
-
+    
     var uuid = require('uuid');
     const fileName = uuid.v4();
 
@@ -76,6 +63,7 @@ function handleEvent(event) {
     fs.mkdir('tmp', function (err) {});
 
     //save imagefile to /tmp
+    fs.mkdir('tmp', function (err) {});
     var writeStream = fs.createWriteStream('tmp/' + fileName + '.jpg', { flags : 'w' });
     var imageName = fileName + '.jpg';
 
@@ -93,17 +81,45 @@ function handleEvent(event) {
       
 
       var img_url = "https://" + host +"/"+ fileName + '.jpg';
+      console.log("https://a9ef35da.ngrok.io/?imgurl=" + encodeURIComponent(imageName));
+      var python_url = "https://a9ef35da.ngrok.io/?imgurl=" + encodeURIComponent(imageName);
 
-      save_to_bucket(buf, imageName)
-      .then(function(bucket){ return rekognition_happy_rate(bucket, fileName)})
-      .then(function(happy){
-          const message = { type: 'text', text: img_url};
-          return client.replyMessage(event.replyToken, message);
-      });
+
+
+
+      //オプションを定義
+      var options = {
+        url: python_url,
+        method: 'GET',
+      }
+
+      //リクエスト送信
+      var request = require('sync-request');
+      var res = request('GET', python_url );
+      //var user = JSON.parse(res.getBody('utf8'));
+      var happy_rate = res.getBody('utf8');
+      console.log(happy_rate);
+      var happy = '幸福度:' + happy_rate + '%';
+      console.log(happy);
+      // request(options, function (res) {
+      //   console.log(res);
+      //   console.log('幸福度:' + res + '%');
+      //   //コールバックで色々な処理
+
+      // })
+
+
+      // save_to_bucket(img_url, imageName)
+      // .then(function(s3Object){  return rekognition_happy_rate(s3Object)})
+      // .then(function(happy){
+      //     const message = { type: 'text', text: img_url};
+      //     return client.replyMessage(event.replyToken, message);
+      // });
       // var s3Object = save_to_bucket(img_url, imageName);
       // 幸福度診断
       // var happy = rekognition_happy_rate(s3Object);
-      // const message = { type: 'text', text: img_url};
+      const message = { type: 'text', text: happy};
+      return client.replyMessage(event.replyToken, message);
     }); 
 
     }else{
@@ -112,32 +128,31 @@ function handleEvent(event) {
 }
 
 
-
+/*
 
 // s3に保存
 function save_to_bucket(contentStream, imageName){
   return new Promise(function(resolve){
-    console.log("save_to_bucket");
     var s3 = new AWS.S3(); 
     var bucket = "lnebot-rekognition";
     var params = {
+      Body: contentStream,
       Bucket: bucket,
       Key: imageName,
-      ContentType: "image/png",
-      Body: contentStream
+      ContentLength: contentStream.length,
+      ContentType: 'image/jpeg'
     };
-    console.log("params ok");
 
     s3.putObject(params, function(err, data) {
       if (err) { 
         console.log(err, err.stack);
       }else{
         console.log("Successfully uploaded data to "+  bucket + "/" + imageName);
-        // var s3Object= {
-        //     Bucket: bucket,
-        //     Name: imageName
-        // }
-        resolve(bucket);
+        var s3Object= {
+            Bucket: bucket,
+            Name: imageName
+        }
+        resolve(s3Object);
       } 
     });
   });
@@ -145,23 +160,19 @@ function save_to_bucket(contentStream, imageName){
 
 
 
-function rekognition_happy_rate(bucket, imageName){
+function rekognition_happy_rate(s3Object){
   return new Promise(function (resolve){
-    
-    console.log(bucket);
-    console.log(imageName);
-    var params = {
+    //var buf = new Buffer(img);
+    var param = {
       Image: {
-        S3Object: {
-          Bucket: bucket,
-          Name: imageName
-        }
-      }
+        S3Object: s3Object
+      },
+      Attributes:['ALL']
     };
     var rekognition = new AWS.Rekognition();
     console.log('conection AWS .....');
     // 顔分析
-    rekognition.detectFaces(params, function(err, data) {
+    rekognition.detectFaces(param, function(err, data) {
       if (err) {
         console.log("errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
         console.log(err, err.stack);
@@ -179,7 +190,7 @@ function rekognition_happy_rate(bucket, imageName){
     });
   });
 }
-
+*/
 
 app.listen(PORT);
 console.log(`Server running at ${PORT}`);

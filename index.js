@@ -1,18 +1,27 @@
 'use strict';
 
+
+
 const express = require('express');
 const line = require('@line/bot-sdk');
 const PORT = process.env.PORT || 3000;
 
 const config = {
-    channelSecret: 'aefd4e784f5b48f6d7e89bdbd0863786',
-    channelAccessToken: '7lhY3o2lB0tT918k8qRjoS0+IhbpEmBpQD6i2hxARgwTMlyfmxJbqQA/86KG3k1JCiZlVXam2SsVPbL/upM6ww2EIi2W/yOOTpH6nhdz9Fhr+ui9DFovSeWxcyn919r4wIHiqeQR6sCtzQsxXmNFnQdB04t89/1O/w1cDnyilFU='
+    channelSecret: 'ea3580fc0838ba1c568d86025f82e2ae',
+    channelAccessToken: 'NzinPKPdtLW7wiob9Ycpr8eCjwRDKgesW3f0ASvbFNpjsGctml4NBVkdwUJrOVL57XLlFnHWRK50zPgoYS9Q7NcmBQ2Sd+9c6E/aDG9QvRlyyVryMwGa+Uo2l/qUQUUZp42IxZvuPUVJuDrPOXx9DAdB04t89/1O/w1cDnyilFU='
 };
+
 
 const app = express();
 
+// can access directory 
+app.use(express.static(__dirname + '/tmp'));
+
+var host = "";
+
 app.post('/webhook', line.middleware(config), (req, res) => {
     console.log(req.body.events);
+    host = req.headers.host;
     Promise
       .all(req.body.events.map(handleEvent))
       .then((result) => res.json(result));
@@ -20,36 +29,61 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 
 const client = new line.Client(config);
 
-function handleEvent(event) {
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    return Promise.resolve(null);
+
+
+function readAllChunks(readableStream) {
+  const reader = readableStream.getReader();
+  const chunks = [];
+
+  function pump() {
+    return reader.read().then(({ value, done }) => {
+      if (done) {
+        return chunks;
+      }
+      chunks.push(value);
+      return pump();
+    });
   }
 
-  return client.replyMessage(event.replyToken, {
-    type: 'text',
-    text: event.message.text //実際に返信の言葉を入れる箇所
-  });
+  return pump();
 }
 
-app.listen(PORT);
-console.log(`Server running at ${PORT}`);orEach((event) => {
-        // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
-        if (event.type == "message" && event.message.type == "text"){
-            // ユーザーからのテキストメッセージが「こんにちは」だった場合のみ反応。
-            if (event.message.text == "こんにちは"){
-                // replyMessage()で返信し、そのプロミスをevents_processedに追加。
-                events_processed.push(bot.replyMessage(event.replyToken, {
-                    type: "text",
-                    text: "これはこれは"
-                }));
-            }
-        }
-    });
+function handleEvent(event) {
+  if (event.type !== 'message' || event.message.type !== 'text' || event.message.type !=='image') {
+    const contentStream = client.getMessageContent(event.message.id);
 
-    // すべてのイベント処理が終了したら何個のイベントが処理されたか出力。
-    Promise.all(events_processed).then(
-        (response) => {
-            console.log(`${response.length} event(s) processed.`);
-        }
-    );
-});
+    var uuid = require('uuid');
+    const fileName = uuid.v4();
+
+    const fs = require('fs');
+    fs.mkdir('tmp', function (err) {});
+
+    var writeStream = fs.createWriteStream('tmp/' + fileName + '.jpg', { flags : 'w' });
+    contentStream.pipe(writeStream);
+
+    writeStream.on('close', function () {
+      // const cloudinary = require('cloudinary');
+      // cloudinary.config({
+      //   cloud_name: process.env.CLOUDINARY_NAME,
+      //   api_key: process.env.CLOUDINARY_KEY,
+      //   api_secret: process.env.CLOUDINARY_SECRET
+      // });
+      // cloudinary.uploader.upload('tmp/' + fileName + '.jpg', function(result) {
+      //   console.log(result)
+        var os = require("os");
+
+        const message = { type: 'text', text: "https://" + host + fileName + '.jpg'};
+        return client.replyMessage(event.replyToken, message);
+      }); 
+
+    }else{
+        return Promise.resolve(null);
+    }
+}
+
+
+app.listen(PORT);
+console.log(`Server running at ${PORT}`);
+
+// exception info
+process.on('unhandledRejection', console.dir);
